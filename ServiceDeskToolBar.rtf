@@ -1,0 +1,725 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red255\green0\blue0;\red0\green0\blue255;}
+{\*\generator Msftedit 5.41.21.2512;}\viewkind4\uc1\pard\sl240\slmult1\lang9\f0\fs22 <html>\par
+<head>\par
+<title>SDesk QL Dev</title>\par
+<HTA:APPLICATION \par
+ID="objHTAHelpomatic_test"\par
+APPLICATIONNAME="SD QL Dev"\par
+SCROLL="no"\par
+SINGLEINSTANCE="yes"\par
+WINDOWSTATE="normal"\par
+CAPTION="false"\par
+icon="settings.ico"\par
+>\par
+</HTA:APPLICATION>\par
+<style type="text/css">\par
+/*#wrapper \{margin:0 auto;width:200px; height:740px;\}*/\par
+.button     \{border:3px solid #cccccc; background:#181818; width:155 px;height:30px;text-decoration:none; color:white;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button a  \{\} \par
+.button:hover   \{background:lightblue; border:3px solid gray;color:blue;\}\par
+.button2    \{border:3px solid #cccccc; background:#000999; width:155 px;height:30px;text-decoration:none; color:white;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button2 a  \{\} \par
+.button2:hover   \{background:Lightblue; border:3px solid gray;color:blue;\}\par
+.button3    \{border:3px solid #cccccc; background:#630000; width:155 px;height:30px;text-decoration:none; color:white;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button3 a  \{\} \par
+.button3:hover   \{background:Pink; border:3px solid Darkgray;color:black;\}\par
+.button4    \{border:3px solid #cccccc; background:#CC3333; width:155 px;height:30px;text-decoration:none; color:white;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button4 a  \{\} \par
+.button4:hover   \{background:gold; border:3px solid Darkgray;color:black;\}\par
+.button5    \{border:3px solid #cccccc; background:#336633; width:155 px;height:30px;text-decoration:none; color:white;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button5 a  \{\} \par
+.button5:hover   \{background:gold; border:3px solid Darkgray;color:black;\}\par
+.button6    \{border:3px solid #cccccc; background:#FFF81D; width:155 px;height:30px;text-decoration:none; color:black;margin:5 auto 0 auto; padding: 3px 0px 0px 0px; font-family: calibri;\}\par
+.button6 a  \{\} \par
+.button6:hover   \{background:Red; border:3px solid Darkgray;color:black;\}\par
+a:title\{color:Blue; font-weight:bold;background:White;\}\par
+</style>\par
+\par
+\par
+</head>\par
+\par
+<SCRIPT Language="VBScript">\par
+\par
+'***********************************Window Size On Load\par
+\par
+Sub Window_Onload\par
+       \par
+'*****************************************************\par
+'** Reposition Window to far right side of screen\par
+'*****************************************************\par
+\par
+    Set objWMIService = GetObject("Winmgmts:\\\\.\\root\\cimv2")\par
+    Set colItems = objWMIService.ExecQuery("Select * From Win32_DesktopMonitor where DeviceID = 'DesktopMonitor1'")\par
+\tab '**,,0)\par
+    For Each objItem in colItems\par
+        intHorizontal = objItem.ScreenWidth\par
+        intVertical = objItem.ScreenHeight\par
+    Next \par
+\par
+\tab self.ResizeTo 200,1040\par
+\tab self.moveTo (intHorizontal - 205), 0\par
+\tab\par
+'*****************************************************\par
+'** If Resolution is less than 800 x 600 adjust toolbar\par
+'*****************************************************\par
+    If intVertical < 800 Then\par
+\tab   \par
+\tab Else\par
+\tab   End If\par
+\tab  \par
+\par
+'*****************************************************\par
+\tab\par
+End Sub\par
+\par
+\par
+strComputer = "."\par
+\par
+Set objWMIService = GetObject("winmgmts:" _\par
+    & "\{impersonationLevel=impersonate\}!\\\\" & strComputer & "\\root\\cimv2")\par
+Set colSettings = objWMIService.ExecQuery _\par
+    ("SELECT * FROM Win32_ComputerSystem")\par
+For Each objComputer in colSettings \par
+\par
+strPCName = objComputer.Name\par
+    strMemory = objComputer.TotalPhysicalMemory\par
+    strPCPre = Left(strPCName,3)\par
+   \par
+If strPCPre = "WKB" Then\par
+\tab strPCPre = "OK"\par
+\par
+Elseif strPCPre = "BHS" Then\par
+\tab strPCPre = "OK"\par
+\par
+Elseif strPCPre = "WKC" Then\par
+\tab strPCPre = "OK"\par
+\par
+Elseif strPCPre = "MDV" Then\par
+\tab strPCPre = "OK"\par
+\par
+Else\par
+window.close()\par
+End If\par
+\par
+'Set oShell = CreateObject("WScript.Shell")\par
+'oShell.Run "\\\\ \cf1 [one of our servers]\\\cf0 prog$\\mis\\[\cf1 location\cf0 ]\\Desktop.bat", 0\par
+'Set oShell = Nothing\par
+\par
+\par
+\par
+\par
+Next\par
+     \par
+\par
+'***********************************Window Size On Load End\par
+\par
+Sub MSTSC\par
+\par
+    intValue = txtPCName.Value\par
+\par
+ If intValue = "" Then\par
+\par
+    msgbox "Please enter a workstation name!"\par
+\par
+    Exit Sub\par
+\par
+    Esle\par
+\par
+ End If\par
+\par
+    Set oShell = CreateObject("WScript.Shell")\par
+    oShell.Run "%WinDir%\\system32\\mstsc.exe /v:"&intValue&" /admin"\par
+    Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+'******************************************************************Start Test Routine\par
+\par
+Sub ADUserInf1\par
+\par
+strUserId = txtPCName.Value\par
+\par
+If strUserId = "" Then\par
+\par
+msgbox "Pleaes enter a user ID!"\par
+\par
+Exit Sub\par
+\par
+End If\par
+\par
+\par
+strtest = Mid(strUserId,4,1)\par
+\par
+strtest1 = Mid(strUserId,3,1)\par
+\par
+strvalidate = IsNumeric(strtest)\par
+\par
+strvalidate1 = IsNumeric(strtest1)\par
+\par
+If Not (strValidate1 = strValidate) Then\par
+\par
+ msgbox "Please enter a Valid UserID!!"& (Chr(13)& Chr(10))&(Chr(13)& Chr(10)) &"If the 4 character for user is a # look up ID info manually."\par
+\par
+Exit Sub\par
+\par
+Else\par
+\par
+End If\par
+\par
+msgbox "should this have happened"\par
+\par
+End Sub\par
+\par
+\par
+\par
+\par
+\par
+'******************************************************************End Test Routine\par
+\par
+\par
+\par
+'*******************************************************************Start Find User AD Group Memebership\par
+\par
+Sub ADUserInf\par
+\par
+strUserId = txtPCName.Value\par
+\par
+If strUserId = "" Then\par
+\par
+msgbox "Pleaes enter a user ID!"\par
+\par
+Exit Sub\par
+\par
+End If\par
+\par
+\par
+strtest = Mid(strUserId,4,1)\par
+\par
+strtest1 = Mid(strUserId,3,1)\par
+\par
+strvalidate = IsNumeric(strtest)\par
+\par
+strvalidate1 = IsNumeric(strtest1)\par
+\par
+If Not (strValidate1 = strValidate) Then\par
+\par
+ msgbox "Please enter a Valid UserID!!"& (Chr(13)& Chr(10))&(Chr(13)& Chr(10)) &"If the 4 character for user is a # look up ID info manually."\par
+\par
+Exit Sub\par
+\par
+Else\par
+\par
+End If\par
+\par
+'msgbox "Processing Request"\par
+\par
+'------------------------------------------\par
+\par
+\par
+Const ADS_SCOPE_SUBTREE = 2\par
+\par
+Set objConnection = CreateObject("ADODB.Connection")\par
+Set objCommand =   CreateObject("ADODB.Command")\par
+objConnection.Provider = "ADsDSOObject"\par
+objConnection.Open "Active Directory Provider"\par
+Set objCommand.ActiveConnection = objConnection\par
+\par
+objCommand.Properties("Page Size") = 1000\par
+objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE \par
+\par
+objCommand.CommandText = _\par
+    "SELECT distinguishedName FROM 'LDAP://dc=\cf1 [domain]\cf0 ,dc=\cf1 [domain TLD]\cf0 ' WHERE objectCategory='user' " & _\par
+        "AND sAMAccountName='"&strUserId&"'"\par
+Set objRecordSet = objCommand.Execute\par
+\par
+objRecordSet.MoveFirst\par
+\par
+Do Until objRecordSet.EOF\par
+\par
+     strUserADPath = objRecordSet.Fields("distinguishedName").Value\par
+'    msgbox strUserADPath\par
+     objRecordSet.MoveNext\par
+\par
+Loop\par
+    \par
+If strUserADPath = "" Then\par
+ msgbox = "Can't Find User or account isnt Valid!"\par
+Exit Sub\par
+\par
+Esle\par
+\par
+End If\par
+\par
+'**** Const ForReading = 1, ForWriting = 2, ForAppending = 8\par
+\par
+'**** Set objFSO = CreateObject("Scripting.FileSystemObject")\par
+\par
+'**** If objFSO.FileExists ("\cf1 [a network folder] \cf0 "&strUserID&".txt") Then\par
+'****     objFSO.DeleteFile ("\cf1 [^the same folder]\cf0 "&strUserID&".txt")\par
+'msgbox "file deleted"\par
+\par
+'**** Else\par
+\par
+'msgbox "file not found"\par
+\par
+'**** End If\par
+\par
+'**** Set objTextFile = objFSO.OpenTextFile ("\cf1 [^the same folder] \cf0 "&strUserID&".txt", ForAppending, True)\par
+'**** \tab objTextFile.WriteLine strUserID\par
+'**** \tab objTextFile.WriteLine\par
+\par
+'**** Set objUser = GetObject("LDAP://"&strUserADPath)\par
+\par
+'**** Set colGroups = objUser.Groups\par
+'**** For Each objGroup in colGroups\par
+\tab\par
+'**** \tab strGroupN = objGroup.CN\par
+ \par
+'**** \tab objTextFile.WriteLine strGroupN\par
+\par
+'**** Next\par
+\par
+\par
+'**** \tab objTextFile.Close\par
+\par
+\par
+'**** Set oShell = CreateObject("WScript.Shell")\par
+'**** oShell.Run "notepad.exe \cf1 [^the same folder]\cf0 "&struserid&".txt", 1\par
+'**** Set oShell = Nothing\par
+\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+\par
+oShell.Run "\\\\\cf1  [server]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\ADGroupsQL.vbs "&strUserID&" "&strUserADPath\par
+\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+'*******************************************************************End Find User AD Group Memebership\par
+\par
+\par
+Sub OpenSP\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [our SharePoint Site]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+\par
+Sub OpenMMC\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [AD console/file path]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub PullPCInfo\par
+\par
+\par
+    Set oShell = CreateObject("WScript.Shell")\par
+ \par
+    intValue = txtPCName.Value\par
+\par
+ If intValue = "" Then\par
+\par
+    msgbox "Please enter a workstation name!"\par
+\par
+    Exit Sub\par
+\par
+    Esle\par
+\par
+ End If\par
+\par
+    oShell.Run "\\\\ \cf1 [local server]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\SDPCInfo.hta """&intValue&""""\par
+<!-- \cf1 ^this, when you input a PC name into the toolbar and hit enter, pulls up the PC info\par
+-->\cf0\par
+    Set oShell = Nothing\par
+\tab\par
+End Sub\par
+\par
+\par
+Sub OpenUVNC\par
+\par
+    Set oShell = CreateObject("WScript.Shell")\par
+\par
+    intValue = txtPCName.Value\par
+\par
+ If intValue = "" Then\par
+\par
+    msgbox "Please enter a workstation name!"\par
+\par
+    Exit Sub\par
+\par
+    Esle\par
+\par
+ End If\par
+\par
+    oShell.Run "\cf1 [the location of UVNC to remote into a networked machine]\cf0  " & intValue\par
+\par
+    Set oShell = Nothing\par
+\tab\par
+    End Sub\par
+\par
+\par
+Sub bomgar\par
+\par
+\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab oShell.Run """C:\\Program Files\\Bomgar\\Representative\\\cf1 [our support website]\cf0 bomgar-rep.exe"""\par
+\tab Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+\par
+Sub hemm\par
+\par
+\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab oShell.Run """C:\\Program Files\\\cf1 [software we use]\cf0 """\par
+\tab Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub OpenRA\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "hcp://CN=Microsoft%20Corporation,L=Redmond,S=Washington,C=US/Remote%20Assistance/Escalation/Unsolicited/Unsolicitedrcui.htm", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub HSM\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "{\field{\*\fldinst{HYPERLINK "\\\\\\\\ntcbh65\\\\prog$\\\\HSM\\\\hsm.hta"}}{\fldrslt{\ul\cf2\\\\ntcbh65\\prog$\\HSM\\hsm.hta}}}\f0\fs22 ", 1\par
+Set oShell = Nothing\par
+End Sub\par
+\par
+\par
+Sub \cf1 [a service we use]\cf0\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [said service's website]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub PrintMgr\par
+<!-- \cf1 assorted print tools \par
+-->\cf0\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "%systemroot%\\system32\\printmanagement.msc", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+\par
+Sub OpenBITS\par
+<!--\par
+ \cf1 our helpdesk software's nickname\par
+-->\cf0\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [our helpdesk's website]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub splunk\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [you might know what splunk is. this is a link to our splunk site]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+Sub empower\par
+<!-- \cf1 empowerid is a userside password reset tool\par
+-->\cf0\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [our empowerID website]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+\par
+Sub BENAlert\par
+\par
+Set oShell = CreateObject("WScript.Shell")\par
+oShell.Run "\cf1 [our internal employee network's admin page]\cf0 ", 1\par
+Set oShell = Nothing\par
+\par
+End Sub\par
+\par
+SUB outlookadm\par
+\par
+\tab SET oShell = CreateObject("WScript.Shell")\par
+\tab oShell.Run "", 1\par
+\tab SET oShell = Nothing\par
+\par
+END SUB\par
+\par
+\par
+Sub ClpBoard\par
+\par
+Set objIE = CreateObject("InternetExplorer.Application")\par
+objIE.Navigate("about:blank")\par
+objIE.document.parentwindow.clipboardData.SetData "text", strPCName\par
+objIE.Quit\par
+\par
+msgbox StrPCName&" Copied to Clipboard."\par
+\par
+End Sub\par
+\tab\par
+Sub NPrintInst\par
+\tab\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run """{\field{\*\fldinst{HYPERLINK "\\\\\\\\clientapps\\\\utils\\\\Print_Server_Scripts\\\\Network"}}{\fldrslt{\ul\cf2\\\\clientapps\\utils\\Print_Server_Scripts\\Network}}}\f0\fs22  Printer Install.exe""", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub EnterKey\par
+\tab\tab If window.event.Keycode = 13 Then\par
+\par
+\tab\tab   intValue = txtPCName.Value\par
+\tab\tab\par
+\tab\tab   If intValue = "" Then\par
+\tab\tab  \par
+\tab\tab   msgbox "PC Field is Blank"\par
+\par
+\tab           Else\par
+\par
+\tab\tab   Set oShell = CreateObject("WScript.Shell")\par
+\par
+\tab\tab   oShell.Run "\cf1 [our helpdesk's network drive where this tool  is located]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\SDPCInfo.hta """&intValue&""""\par
+\par
+\tab\tab   Set oShell = Nothing\par
+\par
+\tab\tab   End If\par
+\par
+                End If\par
+\tab\tab\par
+\par
+End Sub\par
+\par
+Sub connect\par
+\tab <!-- \cf1 our nickname for our application page\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [our application's webpage]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub mdvconnect\par
+\tab <!-- \cf1 our nickname for one of our newer sites application page\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [said pages webpage]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub Phone\par
+\tab <!-- \cf1 our IP phone system \par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "chrome \cf1 [our phones logon page]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub \cf1 [a third party software we use #1]\cf0\par
+\tab  \par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [the logon page for the software]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\tab\par
+Sub \cf1 [a third party software we use that we host ourselves #2]\cf0\par
+\tab\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [the server location of the logon page]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub EverB\par
+\tab <!-- \cf1 everbridge, a third party emergency paging system\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "{\field{\*\fldinst{HYPERLINK "https://manager.everbridge.net/login"}}{\fldrslt{\ul\cf2 https://manager.everbridge.net/login}}}\f0\fs22 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub Beep\par
+\tab <!-- \cf1 our onsite paging system\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [our local logon page]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub Oncall\par
+\tab <!-- \cf1 our SharePoint site containing whos oncall\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [the SharePoints page]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub ATS\par
+\tab <!-- \cf1 Asset Tracking Service \par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [ATSs webpage]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub accman\par
+\tab <!-- \cf1 our local access control page\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [accmans webpage]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+\par
+Sub Down\par
+\tab <!-- \cf1 downtime alert system\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [server location for DOWN]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\DownEvent.hta"\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub atsq\par
+\tab <!-- \cf1 another ATS SQL style\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [server location for the SQL tool]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\ATSQuickSearch.hta"\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+\par
+\par
+Sub \cf1 [third party software we use #3]\cf0\par
+\tab\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [the softwares logon page]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+Sub SecAdmin\par
+\tab\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [local tool to check security cams, etc]\cf0 ", 1\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+\par
+Sub secbar\par
+\tab <!-- \cf1 security tool bar. when clicked a second tool bar gets put aloongside the OG one\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [server name, ours is the same as the SD tool bars]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\Sectool.hta"\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+\par
+Sub PrintBar\par
+\tab <!-- \cf1 like the Security bar but holds tools to help with printer managment\par
+-->\cf0\par
+\tab\tab Set oShell = CreateObject("WScript.Shell")\par
+\tab\tab oShell.Run "\cf1 [server name, same as secbar and SDTool]\cf0\\data$\\Common\\helpdesk\\Tools\\QuickLaunch\\Printtool.hta"\par
+\tab\tab Set oShell = Nothing\par
+End Sub\par
+\par
+    \par
+\par
+</SCRIPT>\par
+\par
+<html>\par
+\par
+<body bgcolor="#181818" style="text-align:center;font-family:calibri;">\par
+<div id="wrapper"></div>\par
+<font color="FFFFFF" size="3" align="center" style="font-weight:bold;">Service Desk</font>\par
+<body onkeypress="EnterKey">\par
+<tr>\par
+\par
+<td><b><font face="Verdana" size="2"><input type="text" name="txtPCName" size="20" Style="text-Transform:uppercase"> </font></b> </td>\par
+\par
+<p>\par
+\par
+<a href="#" class="button4" onClick="Oncall" style="font-weight:bold;">On-Call List</a>\par
+\par
+<a href="#" class="button4" onClick="Beep" style="font-weight:bold;">TelAlert</a>\par
+\par
+<a href="#" class="button4" onClick="EverB" style="font-weight:bold;">EverBridge</a>\par
+\par
+<a href="#" class="button2" onClick="Phone" style="font-weight:bold;">Phone</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button4" onClick="openMMC" style="font-weight:bold;">AD Console</a>\par
+\par
+<a href="#" class="button4" onClick="ats" style="font-weight:bold;">ATS Main</a>\par
+\par
+<a href="#" class="button4" onClick="atsq" style="font-weight:bold;">ATS Search</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button" onClick="Empower" style="font-weight:bold;">eMpower ID</a>\par
+\par
+<a href="#" class="button" onClick="Splunk" style="font-weight:bold;">Splunk</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button2" onClick="connect" style="font-weight:bold;">Connect</a>\par
+\par
+<a href="#" class="button2" onClick="mdvconnect" style="font-weight:bold;">MDV Connect</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button3" onClick="MSTSC" title="Connect to PC via Remote Desktop" style="font-weight:bold;">Remote Desktop</a>\par
+\par
+<a href="#" class="button3" onClick="OpenUVNC" title="Connect to PC with VNC" style="font-weight:bold;">Ultra VNC</a>\par
+\par
+<a href="#" class="button3" onClick="bomgar" style="font-weight:bold;">Bomgar</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button2" onClick="PullPcInfo" style="font-weight:bold;">PC Info</a>\par
+\par
+<a href="#" class="button2" onClick="ADUserInf" style="font-weight:bold;">User AD Groups</a>\par
+<!--\par
+\cf1 if you put the user ID in the bar at the top and press this, itll open a txt doc and fill with all AD groups\par
+-->\cf0\par
+<p>\par
+\par
+<a href="#" class="button3" onClick="\cf1 [a third party app#1]\cf0 " style="font-weight:bold;">\cf1 The App name\cf0 </a>\par
+\par
+<a href="#" class="button3" onClick="SecBar" style="font-weight:bold;">Security n Maint</a>\par
+\par
+<a href="#" class="button3" onClick="PrintBar" style="font-weight:bold;">Print Tools</a>\par
+\par
+<p>\par
+\par
+<a href="#" class="button" onClick="OpenSP" style="font-weight:bold;">SharePoint</a>\par
+\par
+<a href="#" class="button6" onClick="Down" style="font-weight:bold;">\'a1 Down !</a>\par
+\par
+<a href="#" class="button" onClick="OpenBITS" style="font-weight:bold;">BITS</a>\par
+\par
+<!--\par
+Removed 2/11/2014\par
+<a href="#" class="button" onClick="More" style="font-weight:bold;">--MORE--</a>\par
+-->\par
+<!--\par
+created by Brent Oerther - distributed by Andrew Hatton - last modified August 2017\par
+-->\par
+<p>\par
+\par
+\par
+</div>\par
+</body>\par
+</html> \par
+}
+ 
